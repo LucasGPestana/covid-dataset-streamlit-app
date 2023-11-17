@@ -177,6 +177,21 @@ def main():
 
   data = loadData("files/brazil_covid19_cities.csv", ["name", "date", "state", "deaths", "cases"])
 
+  # Configurações do Sidebar
+
+  # Cor de fundo
+  st.markdown("""
+              <style>
+                [data-testid=stSidebar] {
+                      background-color: rgb(13, 33, 79);
+                }
+              </style>
+              """, unsafe_allow_html=True)
+  
+  # Cabeçalho e imagem
+  st.sidebar.header("Sistema Nexus")
+  st.sidebar.image("images/rounded-logo.png")
+
   # Tratamento dos dados
 
   # Converte as strings em objetos datetime
@@ -281,6 +296,15 @@ def main():
       pass
 
     else:
+
+      st.markdown("""
+                  <script>
+                      this.scrollTo({
+                        top: 1000,
+                        behavior: 'smooth'
+                    });
+                  </script>
+                  """, unsafe_allow_html=True)
 
       # Adiciona às informações do estado informações sobre a cidade escolhida
       st.write("---")
