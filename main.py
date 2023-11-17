@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -297,14 +298,15 @@ def main():
 
     else:
 
-      st.markdown("""
-                  <script>
-                      this.scrollTo({
-                        top: 1000,
-                        behavior: 'smooth'
+      # Faz a rolagem da página aos gráficos correspondentes a cidade
+      streamlit.components.v1.html(html="""
+                <script>
+                    window.scrollTo({
+                      top: 1000,
+                      behavior: 'smooth'
                     });
-                  </script>
-                  """, unsafe_allow_html=True)
+                </script>
+                  """)
 
       # Adiciona às informações do estado informações sobre a cidade escolhida
       st.write("---")
