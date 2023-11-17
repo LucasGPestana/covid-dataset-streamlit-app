@@ -191,7 +191,7 @@ def main():
   
   # Cabeçalho e imagem
   st.sidebar.header("Sistema Nexus")
-  st.sidebar.image("images/rounded-logo.png")
+  st.sidebar.image("images/rounded-logo.png", width=150)
 
   # Tratamento dos dados
 
@@ -299,14 +299,8 @@ def main():
     else:
 
       # Faz a rolagem da página aos gráficos correspondentes a cidade
-      streamlit.components.v1.html(html="""
-                <script>
-                    window.scrollTo({
-                      top: 1000,
-                      behavior: 'smooth'
-                    });
-                </script>
-                  """)
+      with open("src/main.js", "r") as file:
+        streamlit.components.v1.html(html=f"<script>{file.read()}</script>")
 
       # Adiciona às informações do estado informações sobre a cidade escolhida
       st.write("---")
