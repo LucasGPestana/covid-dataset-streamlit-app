@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from PIL import Image
 from deep_translator import GoogleTranslator
 
+@st.cache_data
 def createGraphCities(data, value_data, state):
 
   translator = GoogleTranslator(source="en", target="pt")
@@ -80,6 +81,9 @@ def createGraphYears(data, value_data):
 
   # value_data pode representar deaths ou cases
 
+  translator = GoogleTranslator(source="en", target="pt")
+  text = translator.translate(value_data)
+
   # Cria um Series year (ano) dentro do DataFrame filtrado
   data["year"] = data["date"].apply(lambda x: str(x.year))
 
@@ -87,7 +91,7 @@ def createGraphYears(data, value_data):
   value_per_year = data.groupby("year")[value_data].sum()
 
   # Gráfico em barra (Qtd. mortes/casos x Ano)
-  graph_value_per_year = px.bar(data_frame=value_per_year, y=value_data)
+  graph_value_per_year = px.bar(data_frame=value_per_year, y=value_data, labels={value_data: text.capitalize(), "year": "Ano"})
 
   return graph_value_per_year
 
