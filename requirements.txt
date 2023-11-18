@@ -2,3 +2,4 @@ streamlit
 plotly
 Pillow
 pandas
+deep-translator

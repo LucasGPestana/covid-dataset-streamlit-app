@@ -4,6 +4,23 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
+from deep_translator import GoogleTranslator
+
+def createGraphCities(data, value_data, state):
+
+  translator = GoogleTranslator(source="en", target="pt")
+
+  text = translator.translate(value_data)
+
+  # Gráfico de Área (Qtd. Casos/Mortes x Data), com legenda das cidades do estado
+  value_per_cities = px.area(data_frame=data, 
+                             x="date", 
+                             y=value_data, 
+                             color="name", 
+                             title=f"Quantidade de casos por cidade em {state}",
+                             labels={"date": "Data", value_data: text.capitalize()})
+  
+  return value_per_cities
 
 @st.cache_data
 def createStateInfo(data, value_data):
@@ -235,12 +252,7 @@ def main():
 
     with st.spinner("Carregando dados..."):
       
-      # Gráfico de Área (Qtd. Mortes x Data), com legenda das cidades do estado
-      deaths_per_cities = px.area(data_frame=data_filtered, 
-                                  x="date", 
-                                  y="deaths", 
-                                  color="name", 
-                                  title=f"Quantidade de mortes por cidade em {estado_escolhido}")
+      deaths_per_cities = createGraphCities(data_filtered, "deaths", estado_escolhido)
       st.plotly_chart(deaths_per_cities)
 
       max_info_2, min_info_2, max_city_info_2 = createStateInfo(data_filtered, "deaths")
@@ -262,12 +274,7 @@ def main():
     
     with st.spinner("Carregando dados..."):
       
-      # Gráfico de Área (Qtd. Casos x Data), com legenda das cidades do estado
-      cases_per_cities = px.area(data_frame=data_filtered, 
-                                 x="date", 
-                                 y="cases", 
-                                 color="name", 
-                                 title=f"Quantidade de casos por cidade em {estado_escolhido}")
+      cases_per_cities = createGraphCities(data_filtered, "cases", estado_escolhido)
       st.plotly_chart(cases_per_cities)
 
       max_info, min_info, max_city_info = createStateInfo(data_filtered, "cases")
