@@ -8,21 +8,22 @@ from PIL import Image
 @st.cache_data
 def createStateInfo(data, value_data):
 
-  # Agrupa as datas em um objeto groupby (com esse id), e soma todos os casos desse dia
-  deaths_per_day = data.groupby("date")[value_data].sum()
-  deaths_per_cities = data.groupby("name")[value_data].sum()
+  # Agrupa as datas em um objeto groupby (com esse id), e soma todos as mortes/casos desse dia. O mesmo ocorre para as cidades
+  deaths_per_day = data[["date", value_data]].groupby("date").sum()
+  deaths_per_cities = data[["name", value_data]].groupby("name").sum()
 
-  # Pega o dia (id do objeto DataFrameGroupBy) com o maior valor de mortes associado (Do estado selecionado no selectbox), assim como o próprio valor associado
-  day_with_more_deaths = deaths_per_day.idxmax()
-  qtd_deaths_max = deaths_per_day.max()
+  # Descobre o valor máximo do Series de value_data ("deaths" ou "cases") e filtra em um DataFrame a instância que corresponde a esse valor máximo, resetando o index (linha)
+  # Depois, pega o elemento da primeira linha e da primeira coluna desse novo DataFrame (Referente a data do tipo datetime) e converte para uma string no formato dd/mm/yyyy
+  qtd_deaths_max = deaths_per_day.loc[:, value_data].max()
+  day_with_more_deaths = deaths_per_day.loc[deaths_per_day.loc[:, value_data] == qtd_deaths_max].reset_index().iloc[0, 0].strftime("%d/%m/%Y")
 
-  # Pega o dia com menor valor de mortes associado (Do estado selecionado no selectbox), assim como o próprio valor associado
-  day_with_less_deaths = deaths_per_day.idxmin()
-  qtd_deaths_min = deaths_per_day.min()
+  # O mesmo que o de cima, só que para valor mínimo
+  qtd_deaths_min = deaths_per_day.loc[:, value_data].min()
+  day_with_less_deaths = deaths_per_day.loc[deaths_per_day.loc[:, value_data] == qtd_deaths_min].reset_index().iloc[0, 0].strftime("%d/%m/%Y")
 
-  # Pega a cidade com maior valor de mortes associado (Do estado selecionado no selectbox), assim como o próprio valor associado
-  city_with_more_deaths = deaths_per_cities.idxmax()
-  qtd_deaths_max_city = deaths_per_cities.max()
+  # O mesmo que os dois acima, só que para o valor máximo da cidade
+  qtd_deaths_max_city = deaths_per_cities.loc[:, value_data].max()
+  city_with_more_deaths = deaths_per_cities.loc[deaths_per_cities.loc[:, value_data] == qtd_deaths_max_city].reset_index().iloc[0, 0].strftime("%d/%m/%Y")
 
   return [(day_with_more_deaths, qtd_deaths_max), (day_with_less_deaths, qtd_deaths_min), (city_with_more_deaths, qtd_deaths_max_city)]
 
