@@ -23,7 +23,7 @@ def createStateInfo(data, value_data):
 
   # O mesmo que os dois acima, só que para o valor máximo da cidade
   qtd_deaths_max_city = deaths_per_cities.loc[:, value_data].max()
-  city_with_more_deaths = deaths_per_cities.loc[deaths_per_cities.loc[:, value_data] == qtd_deaths_max_city].reset_index().iloc[0, 0].strftime("%d/%m/%Y")
+  city_with_more_deaths = deaths_per_cities.loc[deaths_per_cities.loc[:, value_data] == qtd_deaths_max_city].reset_index().iloc[0, 0]
 
   return [(day_with_more_deaths, qtd_deaths_max), (day_with_less_deaths, qtd_deaths_min), (city_with_more_deaths, qtd_deaths_max_city)]
 
